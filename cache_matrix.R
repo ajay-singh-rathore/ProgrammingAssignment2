@@ -1,7 +1,7 @@
 library(MASS)
 mkCahMat <- function(a = matrix()) {
   inv<-NULL            #initializing inverse as NULL
-  seter<-function(b){
+  seter<-function(b) {
     a<<-b
     inv<<-NULL
   }
