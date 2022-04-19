@@ -1,30 +1,35 @@
+library(MASS)
+mkCahMat <- function(a = matrix()) {
+  inv<-NULL            #initializing inverse as NULL
+  seter<-function(b){
+    a<<-b
+    inv<<-NULL
+  }
+  geter<-function()a             #function to get matrix a
+  seterinv<-function(inverse)inv<<-inverse
+  geterinv<-function(){ 
+    inver<-ginv(a)
+    inver%*%a           #function to obtain inverse of the matrix
+  }
+  list(seter = seter, geter = geter, 
+       seterinv = seterinv, 
+       geterinv = geterinv)
+}
 
-## I simply set the input x as a matrix
-## and then set the solved value "s" as a null
-## then I changed every reference to "mean" to "solve"
-makeCacheMatrix <- function(x = matrix(sample(1:100,9),3,3)) {
-  s <- NULL
-  set <- function(y) {
-    x <<- y
-    s <<- NULL
+
+## Write a short comment describing this function
+##This is used to get the cache data
+
+cahSol <- function(a, ...) ##gets cache data      
+{
+  inv<-a$geterinv()                  
+  if(!is.null(inv)){                 #checking whether inverse is NUll 
+    message("getting cached data!")
+    return(inv)                       #returns inverse value
   }
-  get <- function() x
-  setsolve <- function(solve) s <<- solve
-  getsolve <- function() s
-  list(set = set, get = get,
-       setsolve = setsolve,
-       getsolve = getsolve)
+  data<-a$geter()
+  inv<-solve(data,...)              #calculates inverse value
+  a$seterinv(inv)
+  inv   ## Return a matrix that is the inverse of 'a'
 }
-##
-## Same here, changed "mean" to "solve" and "m" to "s"
-cacheSolve <- function(x, ...) {
-  s <- x$getsolve()
-  if(!is.null(s)) {
-    message("getting inversed matrix")
-    return(s)
-  }
-  data <- x$get()
-  s <- solve(data, ...)
-  x$setsolve(s)
-  s
-}
+
